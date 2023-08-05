@@ -1,6 +1,6 @@
 altair==5.0.1
-opencv-python==4.6.0.66
-opencv-python-headless
+opencv-python==4.5.5.64
+opencv-contrib-python==4.5.5.64
 anyio==3.7.1
 astor==0.8.1
 asttokens==2.2.1
