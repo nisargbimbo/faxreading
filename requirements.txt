@@ -1,5 +1,5 @@
 altair==5.0.1
-opencv-contrib-python==4.6.0.66
+opencv-python==4.6.0.66
 opencv-python-headless
 anyio==3.7.1
 astor==0.8.1
