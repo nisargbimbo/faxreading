@@ -11,16 +11,16 @@ from stqdm import stqdm
 import glob
 
 # Load the OCR Model
-ocr = PaddleOCR(use_angle_cls=False, lang='en', det_model_dir=r"PaddleOCR\en_PP-OCRv3_det_infer",
-                rec_model_dir=r"PaddleOCR\en_PP-OCRv3_rec_infer",
-                cls_model_dir =r"PaddleOCR\ch_ppocr_mobile_v2.0_cls_infer",
+ocr = PaddleOCR(use_angle_cls=False, lang='en', det_model_dir="PaddleOCR/en_PP-OCRv3_det_infer",
+                rec_model_dir="PaddleOCR/en_PP-OCRv3_rec_infer",
+                cls_model_dir ="PaddleOCR/ch_ppocr_mobile_v2.0_cls_infer",
                 show_log = False,
                 e2e_pgnet_score_thresh=0.4) # need to run only once to download and load model into memory
 
 def convert_pdf_image_path(pdf_path, save_folder, filename, number_of_pages):
     
     # Store Pdf with convert_from_path function
-    images = convert_from_path(pdf_path, poppler_path = r'poppler-23.07.0\Library\bin')
+    images = convert_from_path(pdf_path, poppler_path = 'poppler-23.07.0/Library/bin')
     
     if os.path.isdir(os.path.join(save_folder, filename[:-4])):
         pass
@@ -36,7 +36,7 @@ def convert_pdf_image_path(pdf_path, save_folder, filename, number_of_pages):
 def convert_pdf_image_bytes(pdf_file, save_folder, filename, number_of_pages):
     
     # Store Pdf with convert_from_path function
-    images = convert_from_bytes(pdf_file.read(), poppler_path = r'poppler-23.07.0\Library\bin')
+    images = convert_from_bytes(pdf_file.read(), poppler_path = 'poppler-23.07.0/Library/bin')
     
     if os.path.isdir(os.path.join(save_folder, filename[:-4])):
         pass
