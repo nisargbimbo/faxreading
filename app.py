@@ -9,6 +9,8 @@ import warnings
 warnings.filterwarnings("ignore")
 from stqdm import stqdm
 import glob
+import tempfile
+import pathlib
 
 # Load the OCR Model
 ocr = PaddleOCR(use_angle_cls=False, lang='en', det_model_dir="./PaddleOCR/en_PP-OCRv3_det_infer",
@@ -17,42 +19,51 @@ ocr = PaddleOCR(use_angle_cls=False, lang='en', det_model_dir="./PaddleOCR/en_PP
                 show_log = False,
                 e2e_pgnet_score_thresh=0.4) # need to run only once to download and load model into memory
 
+temp_folder = tempfile.TemporaryDirectory()
+save_folder = pathlib.Path(temp_folder.name)
+
 def convert_pdf_image_path(pdf_path, save_folder, filename, number_of_pages):
     
     # Store Pdf with convert_from_path function
-    images = convert_from_path(pdf_path,) #poppler_path = './poppler-23.07.0/Library/bin')
+    images = convert_from_path(pdf_path, poppler_path = './poppler-23.07.0/Library/bin')
     
-    if os.path.isdir(os.path.join(save_folder, filename[:-4])):
-        pass
-    else:
-        os.mkdir(os.path.join(save_folder, filename[:-4]))
+    # if os.path.isdir(os.path.join(save_folder, filename[:-4])):
+    #     pass
+    # else:
+    #     os.mkdir(os.path.join(save_folder, filename[:-4]))
     
     for i in range(int(number_of_pages)):
 
         # Save pages as images in the pdf
-        images[i].save(os.path.join(os.path.join(save_folder, filename[:-4]), 'page_'+ str(i) +'.png'), 'PNG')
+        images[i].save(os.path.join(save_folder, 'page_'+ str(i) +'.png'), 'PNG')
 
 
 def convert_pdf_image_bytes(pdf_file, save_folder, filename, number_of_pages):
     
     # Store Pdf with convert_from_path function
-    images = convert_from_bytes(pdf_file.read(),) #poppler_path = './poppler-23.07.0/Library/bin')
+    images = convert_from_bytes(pdf_file.read(), poppler_path = './poppler-23.07.0/Library/bin')
+
+    # uploaded_file_path = pathlib.Path(temp_dir.name) / filename
+
+    #     output_temporary_file.write(uploaded_file.read())
     
-    if os.path.isdir(os.path.join(save_folder, filename[:-4])):
-        pass
-    else:
-        os.mkdir(os.path.join(save_folder, filename[:-4]))
+    # if os.path.isdir(os.path.join(save_folder, filename[:-4])):
+    #     pass
+    # else:
+    #     os.mkdir(os.path.join(save_folder, filename[:-4]))
     
     for i in range(int(number_of_pages)):
 
-        # Save pages as images in the pdf
-        images[i].save(os.path.join(os.path.join(save_folder, filename[:-4]), 'page_'+ str(i) +'.png'), 'PNG')
+        #with open(uploaded_file_path, 'wb') as output_temporary_file:
+
+            # Save pages as images in the pdf
+            images[i].save(os.path.join(save_folder, 'page_'+ str(i) +'.png'), 'PNG')
 
 
 def convert_pdf_image_to_excel(save_folder, filename):
 
     final_df = pd.DataFrame()
-    filelist = glob.glob(os.path.join(save_folder, filename[:-4], "*.png"))
+    filelist = glob.glob(os.path.join(save_folder, "*.png"))
     
 
     #for images in stqdm(glob.glob(os.path.join(save_folder, filename[:-4]))):
@@ -64,7 +75,7 @@ def convert_pdf_image_to_excel(save_folder, filename):
             if images[:-4] == 'page_0':
                 continue
             
-            img_path = os.path.join(save_folder, filename[:-4], images)
+            img_path = os.path.join(save_folder, images)
             result = ocr.ocr(img_path, cls=False)
             
             for i in range(len(result[0])):
@@ -166,24 +177,31 @@ def convert_pdf_image_to_excel(save_folder, filename):
     final_df.sort_values(by = ['Article', 'Entr.'], ascending=[True, True], inplace = True)
     final_df.reset_index(inplace=True, drop=True)
 
-    if os.path.isdir(os.path.join(save_folder, "convertedToExcel")):
-        try:
-            final_df.to_csv(os.path.join(save_folder, "convertedToExcel", '{}.csv'.format(filename[:-4])))
-            st.write("### {} file conversion is completed and output is saved".format(filename[:-4])) 
+    download1 = st.download_button(
+    label="Download converted file as CSV",
+    data=final_df.to_csv(index=False).encode('utf-8'),
+    file_name='{}.csv'.format(filename[:-4]),
+    mime='text/csv'
+    )
 
-        except Exception as error:
-            if type(error).__name__ == 'PermissionError':
-                st.write("#### Error!! Close the excel file which has the same as the pdf and try again.")
+    # if os.path.isdir(os.path.join(save_folder, "convertedToExcel")):
+    #     try:
+    #         final_df.to_csv(os.path.join(save_folder, "convertedToExcel", '{}.csv'.format(filename[:-4])))
+    #         st.write("### {} file conversion is completed and output is saved".format(filename[:-4])) 
 
-    else:
-        os.mkdir(os.path.join(save_folder, "convertedToExcel"))
-        try:
-            final_df.to_csv(os.path.join(save_folder, "convertedToExcel", '{}.csv'.format(filename[:-4])))
-            st.write("### {} file conversion is completed and output is saved".format(filename[:-4])) 
+    #     except Exception as error:
+    #         if type(error).__name__ == 'PermissionError':
+    #             st.write("#### Error!! Close the excel file which has the same as the pdf and try again.")
 
-        except Exception as error:
-            if type(error).__name__ == 'PermissionError':
-                st.write("#### Error!! Close the excel file which has the same as the pdf aad try again.")
+    # else:
+    #     os.mkdir(os.path.join(save_folder, "convertedToExcel"))
+    #     try:
+    #         final_df.to_csv(os.path.join(save_folder, "convertedToExcel", '{}.csv'.format(filename[:-4])))
+    #         st.write("### {} file conversion is completed and output is saved".format(filename[:-4])) 
+
+    #     except Exception as error:
+    #         if type(error).__name__ == 'PermissionError':
+    #             st.write("#### Error!! Close the excel file which has the same as the pdf aad try again.")
 
 
 
@@ -207,7 +225,7 @@ st.sidebar.markdown("## Select the option from below")
 select_event = st.sidebar.selectbox('How do you want to convert the PDF?',
                                     ['Uploading the PDF File', 'Convert PDF/s file from folder'])
 
-save_folder = st.sidebar.text_input('### Enter the save folder path', key = '3')
+#save_folder = st.sidebar.text_input('### Enter the save folder path', key = '3')
 number_of_pages = st.sidebar.text_input('### Enter the number of pages you want to convert', key = 'number_of_pages')
 
 if select_event == 'Uploading the PDF File':
@@ -216,7 +234,7 @@ if select_event == 'Uploading the PDF File':
 
     if st.sidebar.button('Convert the PDF'):
 
-        if uploaded_file is None or len(save_folder) == 0:
+        if uploaded_file is None: #or len(save_folder) == 0:
             st.write("### Please upload the pdf or specify the save folder path...")
         
         else:
