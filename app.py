@@ -25,7 +25,7 @@ save_folder = pathlib.Path(temp_folder.name)
 def convert_pdf_image_path(pdf_path, save_folder, filename, number_of_pages):
     
     # Store Pdf with convert_from_path function
-    images = convert_from_path(pdf_path, poppler_path = './poppler-23.07.0/Library/bin')
+    images = convert_from_path(pdf_path) # poppler_path = './poppler-23.07.0/Library/bin')
     
     # if os.path.isdir(os.path.join(save_folder, filename[:-4])):
     #     pass
@@ -41,7 +41,7 @@ def convert_pdf_image_path(pdf_path, save_folder, filename, number_of_pages):
 def convert_pdf_image_bytes(pdf_file, save_folder, filename, number_of_pages):
     
     # Store Pdf with convert_from_path function
-    images = convert_from_bytes(pdf_file.read(), poppler_path = './poppler-23.07.0/Library/bin')
+    images = convert_from_bytes(pdf_file.read(), ) #poppler_path = './poppler-23.07.0/Library/bin')
 
     # uploaded_file_path = pathlib.Path(temp_dir.name) / filename
 
