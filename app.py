@@ -31,11 +31,17 @@ def convert_pdf_image_path(pdf_path, save_folder, filename, number_of_pages):
     #     pass
     # else:
     #     os.mkdir(os.path.join(save_folder, filename[:-4]))
-    
-    for i in range(int(number_of_pages)):
 
-        # Save pages as images in the pdf
-        images[i].save(os.path.join(save_folder, 'page_'+ str(i) +'.png'), 'PNG')
+    if number_of_pages != 0:
+        for i in range(int(number_of_pages)):
+            # Save pages as images in the pdf
+            images[i].save(os.path.join(save_folder, 'page_'+ str(i) +'.png'), 'PNG')
+        
+    else:
+        for i in range(len(images)):
+            # Save pages as images in the pdf
+            images[i].save(os.path.join(save_folder, 'page_'+ str(i) +'.png'), 'PNG')
+
 
 
 def convert_pdf_image_bytes(pdf_file, save_folder, filename, number_of_pages):
@@ -52,10 +58,13 @@ def convert_pdf_image_bytes(pdf_file, save_folder, filename, number_of_pages):
     # else:
     #     os.mkdir(os.path.join(save_folder, filename[:-4]))
     
-    for i in range(int(number_of_pages)):
-
-        #with open(uploaded_file_path, 'wb') as output_temporary_file:
-
+    if number_of_pages != 0:
+        for i in range(int(number_of_pages)):
+                # Save pages as images in the pdf
+                images[i].save(os.path.join(save_folder, 'page_'+ str(i) +'.png'), 'PNG')
+    
+    else:
+        for i in range(len(images)):
             # Save pages as images in the pdf
             images[i].save(os.path.join(save_folder, 'page_'+ str(i) +'.png'), 'PNG')
 
@@ -225,8 +234,17 @@ st.sidebar.markdown("## Select the option from below")
 select_event = st.sidebar.selectbox('How do you want to convert the PDF?',
                                     ['Uploading the PDF File']) #, 'Convert PDF/s file from folder'])
 
-#save_folder = st.sidebar.text_input('### Enter the save folder path', key = '3')
-number_of_pages = st.sidebar.text_input('### Enter the number of pages you want to convert', key = 'number_of_pages')
+select_what_to_do = st.sidebar.selectbox('How many pages you want to convert',
+                                    ['Enter number of pages', 'All Pages']) #, 'Convert PDF/s file from folder'])
+
+if select_what_to_do == 'Enter number of pages':
+
+    #save_folder = st.sidebar.text_input('### Enter the save folder path', key = '3')
+    number_of_pages = st.sidebar.text_input('### Enter the number of pages you want to convert', key = 'number_of_pages')
+
+if select_what_to_do == 'All Pages':
+
+    number_of_pages = 0
 
 if select_event == 'Uploading the PDF File':
 
