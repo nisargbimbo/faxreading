@@ -211,7 +211,7 @@ apptitle = 'FAX Reading'
 st.set_page_config(page_title=apptitle, page_icon=":eyeglasses:")
 
 # Title the app
-st.title('## XLSify: FAX PDF to Excel Converter')
+st.title('XLSify: FAX PDF to Excel Converter')
 
 st.markdown("""
 ##### This application will help you convert the FAX received from Customers into Excel directly.
