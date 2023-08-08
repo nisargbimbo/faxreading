@@ -223,7 +223,7 @@ st.sidebar.markdown("## Select the option from below")
 
 #-- Set time by GPS or event
 select_event = st.sidebar.selectbox('How do you want to convert the PDF?',
-                                    ['Uploading the PDF File', 'Convert PDF/s file from folder'])
+                                    ['Uploading the PDF File']) #, 'Convert PDF/s file from folder'])
 
 #save_folder = st.sidebar.text_input('### Enter the save folder path', key = '3')
 number_of_pages = st.sidebar.text_input('### Enter the number of pages you want to convert', key = 'number_of_pages')
