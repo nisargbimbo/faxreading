@@ -1,0 +1,5 @@
+version: 1
+services:
+  - name: FaxReading
+    buildCommand: ./render-prebuild.sh  # This is the pre-build script
+    startCommand: streamlit run app.py
